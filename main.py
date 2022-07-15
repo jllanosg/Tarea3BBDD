@@ -119,5 +119,34 @@ def facturas_put(id_factura):
     facturas.update()
     return jsonify(facturas.json())
 #====================================================================================#
+#=====================================REPRODUCCIONES=================================#
+@app.route('/api/reproducciones', methods=['GET'])
+def reproducciones_select():
+    reproducciones = [reproduccion.json() for reproduccion in Reproducciones.query.all()]
+    response = jsonify(reproducciones)
+    return response
+#====================================================================================#
+@app.route('/api/reproducciones', methods=['POST'])
+def reproducciones_insert():
+    json = request.get_json()
+    reproducciones = Reproducciones.create(json['id_cancion'],json['id_usuario'],json['cantidad_reproducciones'],json['ultima_reproduccion'])
+    response = jsonify(reproducciones.json())
+    return response
+#====================================================================================#
+@app.route('/api/reproducciones/<id_cancion>/<id_usuario>', methods=['DELETE'])
+def reproducciones_delete(id_cancion,id_usuario):
+    reproducciones = Reproducciones.query.filter_by(id_cancion=id_cancion,id_usuario=id_usuario).first()
+    reproducciones.delete()
+    return jsonify({'mensaje':'Cancion eliminada con exito'})
+#====================================================================================#
+@app.route('/api/reproducciones/<id_cancion>/<id_usuario>', methods=['PUT'])
+def reproducciones_put(id_cancion,id_usuario):
+    json = request.get_json()
+    reproducciones = Reproducciones.query.filter_by(id_cancion=id_cancion,id_usuario=id_usuario).first()
+    reproducciones.cantidad_reproducciones = json['cantidad_reproducciones']
+    reproducciones.ultima_reproduccion = json['ultima_reproduccion']
+    reproducciones.update()
+    return jsonify(reproducciones.json())
+#====================================================================================#
 if __name__ == "__main__":
     app.run(debug=True)

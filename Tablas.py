@@ -100,6 +100,39 @@ class Reproducciones(db.Model):
     cantidad_reproducciones = db.Column(db.Integer,nullable=True)
     ultima_reproduccion = db.Column(db.DateTime,nullable=True)
 
+    @classmethod
+    def create(cls,id_cancion,id_usuario,cantidad_reproducciones,ultima_reproduccion):
+        reproduccion = Reproducciones(id_cancion=id_cancion,id_usuario=id_usuario,cantidad_reproducciones=cantidad_reproducciones,ultima_reproduccion=ultima_reproduccion)
+        return reproduccion.save()
+
+    def save(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return self
+        except:
+            return False
+
+    def delete(self):
+        try:
+            db.session.delete(self)
+            db.session.commit()
+            return self
+        except:
+            return False
+
+    def update(self):
+        self.save()
+
+    #Hacemos uno con JSON pal postman
+    def json(self):
+        return{
+            'id_cancion': self.id_cancion,
+            'id_usuario': self.id_usuario,
+            'cantidad_reproducciones': self.cantidad_reproducciones,
+            'ultima_reproduccion': self.ultima_reproduccion,
+        }
+
 class Facturas(db.Model):
     __tablename__ = 'facturas'
     id_factura = db.Column(db.Integer,primary_key=True)
