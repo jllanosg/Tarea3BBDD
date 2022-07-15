@@ -13,4 +13,7 @@ usuario = ""
 clave = ""
 nombre_bd = ""
 ```
-Donde cada string contenga la credencial que le corresponda para conectarse a la base de datos. 
+Donde cada string contenga la credencial que le corresponda para conectarse a la base de datos.
+
+
+### Los metodos HTTP en json siempre van a contener todos los atributos necesarios.
