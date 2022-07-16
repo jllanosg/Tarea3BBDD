@@ -1,8 +1,11 @@
+import json
 import flask
 from Config import config
 from Tablas import*
 from flask_cors import CORS
 from flask import jsonify, request
+from datetime import date
+
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
@@ -62,6 +65,7 @@ def personas_insert():
     json = request.get_json()
     personas = Personas.create(json['nombre'],json['apellido'],json['email'],json['password'],json['usuario_suscripcion_activa'],json['artista_nombre_artistico'],json['artista_verificado'],json['tipo_de_persona'])
     response = jsonify(personas.json())
+    response.status_code=200
     return response
 #====================================================================================#
 @app.route('/api/personas/<id_usuario>', methods=['DELETE'])
@@ -148,5 +152,79 @@ def reproducciones_put(id_cancion,id_usuario):
     reproducciones.update()
     return jsonify(reproducciones.json())
 #====================================================================================#
+
+#====================================================================================#
+#=====================================MOROSO=========================================#
+@app.route('/api/moroso/<id_usuario>', methods=['GET'])
+def moroso(id_usuario):
+    facturas = [factura.json() for factura in Facturas.query.filter_by(id_usuario=id_usuario)]
+
+    today = date.today()
+
+    fac = []
+
+    for factura in facturas:
+        fecha = factura["fecha_vencimiento"]
+        if (( fecha - today).days <0):
+            fac.append(factura)
+
+    if (fac==[]):
+        mensaje="El usuario no tiene facturas vencidas."
+    else:
+        mensaje="El usuario tiene facturas vencidas."
+
+
+    response= {
+        "mensaje": mensaje,
+        "facturas": fac
+    }
+    response = jsonify(response)
+    return response
+
+#====================================================================================#
+#=================================PERSONAS MOROSAS===================================#
+@app.route('/api/morosos', methods=['GET'])
+def morosos():
+    facturas = [factura.json() for factura in Facturas.query.all()]
+    today = date.today()
+
+    # Se guardan las id's de las morosas, para contar qty_personas
+    ids_facturas_morosas=[]
+    platita=0
+    for factura in facturas:
+        fecha = factura["fecha_vencimiento"]
+        if (( fecha - today).days <0):
+            platita+=factura["monto_facturado"]
+            if factura["id_usuario"] not in ids_facturas_morosas:
+                ids_facturas_morosas.append(factura["id_usuario"])
+
+    response = {
+        "qty_personas": len(ids_facturas_morosas),
+        "qty_dinero": platita
+    }
+    return jsonify(response)
+#====================================================================================#
+#===================================STONKS===========================================#
+@app.route('/api/stonks', methods=['GET'])
+def stonks():
+    facturas = [factura.json() for factura in Facturas.query.all()]
+    today = date.today()
+    platita=0
+    for factura in facturas:
+        fecha = factura["fecha_hora_pago"]
+        if (fecha and ( today - fecha.date() ).days <=31):
+            platita+=factura["monto_facturado"]
+    response = {
+        "qty_dinero": platita
+    }
+    return jsonify(response)
+
+#====================================================================================#
+#===================================TOP10============================================#
+''' WORK IN PROGRESS XD
+@app.route('/api/topten/<id_usuario>', methods=['GET'])
+def top_ten(id_usuario):
+    canciones = Reproducciones.query.filter_by(id_usuario=id_usuario).order_by(desc(model.Entry.amount))
+'''
 if __name__ == "__main__":
     app.run(debug=True)
