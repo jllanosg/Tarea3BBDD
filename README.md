@@ -3,7 +3,7 @@
 # Miembros
 
 ## José Llanos | ROL: 202073103-9
-## Kirk Heim | ROL: 2019
+## Kirk Heim | ROL: 201903009-4
 
 
 # ❗  Importante ❗
