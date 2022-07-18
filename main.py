@@ -40,8 +40,13 @@ def canciones_insert():
 @app.route('/api/canciones/<id_cancion>', methods=['DELETE'])
 def canciones_delete(id_cancion):
     canciones = Canciones.query.filter_by(id_cancion=id_cancion).first()
-    canciones.delete()
-    return jsonify({'mensaje':'Cancion eliminada con exito'})
+    if canciones:
+        canciones.delete()
+        return jsonify({'mensaje':'Cancion eliminada con exito'})
+    else:
+        response = jsonify({'mensaje':'No se encontró la canción'})
+        response.status_code = 404
+        return response
 #====================================================================================#
 @app.route('/api/canciones/<id_cancion>', methods=['PUT'])
 def canciones_put(id_cancion):
@@ -157,6 +162,12 @@ def reproducciones_put(id_cancion,id_usuario):
 #=====================================MOROSO=========================================#
 @app.route('/api/moroso/<id_usuario>', methods=['GET'])
 def moroso(id_usuario):
+
+    #FALTA VERIFICAR QUE EL USUARIO EXISTA########
+    #FALTA VERIFICAR QUE EL USUARIO EXISTA########
+    #FALTA VERIFICAR QUE EL USUARIO EXISTA########
+    #FALTA VERIFICAR QUE EL USUARIO EXISTA########
+
     facturas = [factura.json() for factura in Facturas.query.filter_by(id_usuario=id_usuario)]
 
     today = date.today()
@@ -221,10 +232,15 @@ def stonks():
 
 #====================================================================================#
 #===================================TOP10============================================#
-''' WORK IN PROGRESS XD
 @app.route('/api/topten/<id_usuario>', methods=['GET'])
 def top_ten(id_usuario):
-    canciones = Reproducciones.query.filter_by(id_usuario=id_usuario).order_by(desc(model.Entry.amount))
-'''
+    canciones = [reproduccion.json() for reproduccion in Reproducciones.query.filter_by(id_usuario=id_usuario).order_by(Reproducciones.cantidad_reproducciones.desc()).limit(10).all()]
+    return jsonify(canciones)
+
+# Top 10 Global
+@app.route('/api/toptenglobal', methods=['GET'])
+def top_ten_global():
+    canciones = [reproduccion.json() for reproduccion in Reproducciones.query.order_by(Reproducciones.cantidad_reproducciones.desc()).limit(10).all()]
+    return jsonify(canciones)
 if __name__ == "__main__":
     app.run(debug=True)
