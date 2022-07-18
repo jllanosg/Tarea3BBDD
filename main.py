@@ -1,4 +1,5 @@
 import json
+from urllib import response
 import flask
 from Config import config
 from Tablas import*
@@ -295,7 +296,24 @@ def top_ten(id_usuario):
 # Top 10 Global
 @app.route('/api/toptenglobal', methods=['GET'])
 def top_ten_global():
-    canciones = [reproduccion.json() for reproduccion in Reproducciones.query.order_by(Reproducciones.cantidad_reproducciones.desc()).limit(10).all()]
-    return jsonify(canciones)
+    # perdon me dio lata ponerlo en mas de una linea xd
+    query = db.text("SELECT CANCIONES.NOMBRE,TOP.TOTAL_REPRODUCCIONES FROM CANCIONES INNER JOIN (SELECT ID_CANCION, SUM (CANTIDAD_REPRODUCCIONES) AS TOTAL_REPRODUCCIONES FROM REPRODUCCIONES GROUP BY ID_CANCION ORDER BY TOTAL_REPRODUCCIONES DESC LIMIT 10) AS TOP ON CANCIONES.ID_CANCION = TOP.ID_CANCION;")
+    result = db.session.execute(query)
+    response = [{"cancion":row[0],"reproducciones":row[1]} for row in result]
+    return jsonify(response)
+
+# ======================== STATS ========================  #
+@app.route('/api/stats', methods=["GET"])
+def stats():
+    query1 = db.text("SELECT count(id_cancion) AS cantidad_canciones FROM canciones;")
+    result1 = db.session.execute(query1)
+    query2 = db.text("SELECT count(id_usuario) AS cantidad_usuarios FROM personas;")
+    result2 = db.session.execute(query2)
+    for row in result1:
+        response = {"canciones": row[0]}
+    for row in result2:
+        response["usuarios"]=row[0]
+    return jsonify(response)
+
 if __name__ == "__main__":
     app.run(debug=True)
