@@ -19,5 +19,5 @@ Donde cada string contenga la credencial que le corresponda para conectarse a la
 - Las consultas HTTP en json siempre van a contener todos los atributos necesarios.
 
 ## To-do
-- [ ] Reparar mensajes de estado 404 (not found) y 400 (bad request).
+- [X] Reparar mensajes de estado 404 (not found) y 400 (bad request).
 - [ ] En endpoint moroso, que verifique que el usuario exista.

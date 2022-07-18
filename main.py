@@ -34,8 +34,13 @@ def canciones_select():
 def canciones_insert():
     json = request.get_json()
     canciones = Canciones.create(json['nombre'],json['letra'],json['fecha_composicion'])
-    response = jsonify(canciones.json())
-    return response
+    if canciones:
+        response = jsonify(canciones.json())
+        return response
+    else:
+        response = jsonify({'mensaje':'Mala sintaxis'})
+        response.status_code = 400
+        return response
 #====================================================================================#
 @app.route('/api/canciones/<id_cancion>', methods=['DELETE'])
 def canciones_delete(id_cancion):
@@ -52,11 +57,16 @@ def canciones_delete(id_cancion):
 def canciones_put(id_cancion):
     json = request.get_json()
     canciones = Canciones.query.filter_by(id_cancion=id_cancion).first()
-    canciones.nombre = json['nombre']
-    canciones.letra = json['letra']
-    canciones.fecha_composicion = json['fecha_composicion']
-    canciones.update()
-    return jsonify(canciones.json())
+    try:
+        canciones.nombre = json['nombre']
+        canciones.letra = json['letra']
+        canciones.fecha_composicion = json['fecha_composicion']
+        canciones.update()
+        return jsonify(canciones.json())
+    except:
+        response = jsonify({'mensaje':'Mala sintaxis'})
+        response.status_code = 400
+        return response
 #====================================================================================#
 #=====================================PERSONAS=======================================#
 @app.route('/api/personas', methods=['GET'])
@@ -69,30 +79,44 @@ def personas_select():
 def personas_insert():
     json = request.get_json()
     personas = Personas.create(json['nombre'],json['apellido'],json['email'],json['password'],json['usuario_suscripcion_activa'],json['artista_nombre_artistico'],json['artista_verificado'],json['tipo_de_persona'])
-    response = jsonify(personas.json())
-    response.status_code=200
-    return response
+    if personas:
+        response = jsonify(personas.json())
+        return response
+    else:
+        response = jsonify({'mensaje':'Mala sintaxis'})
+        response.status_code = 400
+        return response
 #====================================================================================#
 @app.route('/api/personas/<id_usuario>', methods=['DELETE'])
 def personas_delete(id_usuario):
     personas = Personas.query.filter_by(id_usuario=id_usuario).first()
-    personas.delete()
-    return jsonify({'mensaje':'Usuario eliminada con exito'})
+    if personas:
+        personas.delete()
+        return jsonify({'mensaje':'Persona eliminada con exito'})
+    else:
+        response = jsonify({'mensaje':'No se encontró al usuario'})
+        response.status_code = 404
+        return response
 #====================================================================================#
 @app.route('/api/personas/<id_usuario>', methods=['PUT'])
 def personas_put(id_usuario):
     json = request.get_json()
     personas = Personas.query.filter_by(id_usuario=id_usuario).first()
-    personas.nombre = json['nombre']
-    personas.apellido = json['apellido']
-    personas.email = json['email']
-    personas.password = json['password']
-    personas.usuario_suscripcion_activa = json['usuario_suscripcion_activa']
-    personas.artista_nombre_artistico = json['artista_nombre_artistico']
-    personas.artista_verificado = json['artista_verificado']
-    personas.tipo_de_persona = json['tipo_de_persona']
-    personas.update()
-    return jsonify(personas.json())
+    try:
+        personas.nombre = json['nombre']
+        personas.apellido = json['apellido']
+        personas.email = json['email']
+        personas.password = json['password']
+        personas.usuario_suscripcion_activa = json['usuario_suscripcion_activa']
+        personas.artista_nombre_artistico = json['artista_nombre_artistico']
+        personas.artista_verificado = json['artista_verificado']
+        personas.tipo_de_persona = json['tipo_de_persona']
+        personas.update()
+        return jsonify(personas.json())
+    except:
+        response = jsonify({'mensaje':'Mala sintaxis'})
+        response.status_code = 400
+        return response
 #====================================================================================#
 #=====================================FACTURAS=======================================#
 @app.route('/api/facturas', methods=['GET'])
@@ -105,28 +129,44 @@ def facturas_select():
 def facturas_insert():
     json = request.get_json()
     facturas = Facturas.create(json['monto_facturado'],json['fecha_facturacion'],json['fecha_vencimiento'],json['estado'],json['metodo_de_pago'],json['fecha_hora_pago'],json['id_usuario'])
-    response = jsonify(facturas.json())
-    return response
+    if facturas:
+        response = jsonify(facturas.json())
+        return response
+    else:
+        response = jsonify({'mensaje':'Mala sintaxis'})
+        response.status_code = 400
+        return response
 #====================================================================================#
 @app.route('/api/facturas/<id_factura>', methods=['DELETE'])
 def facturas_delete(id_factura):
     factura = Facturas.query.filter_by(id_factura=id_factura).first()
-    factura.delete()
-    return jsonify({'mensaje':'Factura eliminada con exito'})
+    if factura:
+        factura.delete()
+        return jsonify({'mensaje':'Factura eliminada con exito'})
+    else:
+        response = jsonify({'mensaje':'No se encontró la factura'})
+        response.status_code = 404
+        return response
 #====================================================================================#
 @app.route('/api/facturas/<id_factura>', methods=['PUT'])
 def facturas_put(id_factura):
     json = request.get_json()
     facturas = Facturas.query.filter_by(id_factura=id_factura).first()
-    facturas.monto_facturado = json['monto_facturado']
-    facturas.fecha_facturacion = json['fecha_facturacion']
-    facturas.fecha_vencimiento = json['fecha_vencimiento']
-    facturas.estado = json['estado']
-    facturas.metodo_de_pago = json['metodo_de_pago']
-    facturas.fecha_hora_pago = json['fecha_hora_pago']
-    facturas.id_usuario = json['id_usuario']
-    facturas.update()
-    return jsonify(facturas.json())
+    try:
+        facturas.monto_facturado = json['monto_facturado']
+        facturas.fecha_facturacion = json['fecha_facturacion']
+        facturas.fecha_vencimiento = json['fecha_vencimiento']
+        facturas.estado = json['estado']
+        facturas.metodo_de_pago = json['metodo_de_pago']
+        facturas.fecha_hora_pago = json['fecha_hora_pago']
+        facturas.id_usuario = json['id_usuario']
+        facturas.update()
+        response = jsonify(facturas.json())
+        return response
+    except:
+        response = jsonify({'mensaje':'Mala sintaxis'})
+        response.status_code = 400
+        return response
 #====================================================================================#
 #=====================================REPRODUCCIONES=================================#
 @app.route('/api/reproducciones', methods=['GET'])
@@ -139,23 +179,38 @@ def reproducciones_select():
 def reproducciones_insert():
     json = request.get_json()
     reproducciones = Reproducciones.create(json['id_cancion'],json['id_usuario'],json['cantidad_reproducciones'],json['ultima_reproduccion'])
-    response = jsonify(reproducciones.json())
-    return response
+    if reproducciones:
+        response = jsonify(reproducciones.json())
+        return response
+    else:
+        response = jsonify({'mensaje':'Mala sintaxis'})
+        response.status_code = 400
+        return response
 #====================================================================================#
 @app.route('/api/reproducciones/<id_cancion>/<id_usuario>', methods=['DELETE'])
 def reproducciones_delete(id_cancion,id_usuario):
     reproducciones = Reproducciones.query.filter_by(id_cancion=id_cancion,id_usuario=id_usuario).first()
-    reproducciones.delete()
-    return jsonify({'mensaje':'Cancion eliminada con exito'})
+    if reproducciones:
+        reproducciones.delete()
+        return jsonify({'mensaje':'Reproducción eliminada con exito'})
+    else:
+        response = jsonify({'mensaje':'No se encontró la reproducción'})
+        response.status_code = 404
+        return response
 #====================================================================================#
 @app.route('/api/reproducciones/<id_cancion>/<id_usuario>', methods=['PUT'])
 def reproducciones_put(id_cancion,id_usuario):
     json = request.get_json()
     reproducciones = Reproducciones.query.filter_by(id_cancion=id_cancion,id_usuario=id_usuario).first()
-    reproducciones.cantidad_reproducciones = json['cantidad_reproducciones']
-    reproducciones.ultima_reproduccion = json['ultima_reproduccion']
-    reproducciones.update()
-    return jsonify(reproducciones.json())
+    try:
+        reproducciones.cantidad_reproducciones = json['cantidad_reproducciones']
+        reproducciones.ultima_reproduccion = json['ultima_reproduccion']
+        reproducciones.update()
+        return jsonify(reproducciones.json())
+    except:
+        response = jsonify({'mensaje':'Mala sintaxis'})
+        response.status_code = 400
+        return response
 #====================================================================================#
 
 #====================================================================================#
