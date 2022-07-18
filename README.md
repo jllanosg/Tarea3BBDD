@@ -36,5 +36,6 @@ Donde cada string contenga la credencial que le corresponda para conectarse a la
 - [X] Reparar mensajes de estado 404 (not found) y 400 (bad request).
 - [ ] En endpoint moroso, que verifique que el usuario exista.
 - [ ] Publicar **bien** la documentación final en postman.
+- [ ] Agregar dump final a la entrega.
 ## Extras
 - Se agregó un endpoint que consulta a la BBDD sobre la cantidad de usuarios y canciones, para ser mostradas en PowerBI.
