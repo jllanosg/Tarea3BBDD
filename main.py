@@ -1,6 +1,7 @@
 import json
 from urllib import response
 import flask
+from sqlalchemy import false
 from Config import config
 from Tablas import*
 from flask_cors import CORS
@@ -232,7 +233,8 @@ def moroso(id_usuario):
 
     for factura in facturas:
         fecha = factura["fecha_vencimiento"]
-        if (( fecha - today).days <0):
+        estado = factura["estado"]
+        if (( fecha - today).days <0) and estado == false:
             fac.append(factura)
 
     if (fac==[]):
@@ -260,6 +262,7 @@ def morosos():
     platita=0
     for factura in facturas:
         fecha = factura["fecha_vencimiento"]
+        paga = factura["fecha_hora_pago"]
         if (( fecha - today).days <0):
             platita+=factura["monto_facturado"]
             if factura["id_usuario"] not in ids_facturas_morosas:
