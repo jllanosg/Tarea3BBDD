@@ -262,8 +262,8 @@ def morosos():
     platita=0
     for factura in facturas:
         fecha = factura["fecha_vencimiento"]
-        paga = factura["fecha_hora_pago"]
-        if (( fecha - today).days <0):
+        estado = factura["estado"]
+        if (( fecha - today).days <0) and estado == false:
             platita+=factura["monto_facturado"]
             if factura["id_usuario"] not in ids_facturas_morosas:
                 ids_facturas_morosas.append(factura["id_usuario"])
