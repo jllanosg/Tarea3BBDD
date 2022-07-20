@@ -58,7 +58,12 @@ def canciones_delete(id_cancion):
 @app.route('/api/canciones/<id_cancion>', methods=['PUT'])
 def canciones_put(id_cancion):
     json = request.get_json()
-    canciones = Canciones.query.filter_by(id_cancion=id_cancion).first()
+    try:
+        canciones = Canciones.query.filter_by(id_cancion=id_cancion).first_or_404()
+    except:
+        response = jsonify({'mensaje':'No se encontró la canción'})
+        response.status_code = 404
+        return response
     try:
         canciones.nombre = json['nombre']
         canciones.letra = json['letra']
@@ -103,7 +108,14 @@ def personas_delete(id_usuario):
 @app.route('/api/personas/<id_usuario>', methods=['PUT'])
 def personas_put(id_usuario):
     json = request.get_json()
-    personas = Personas.query.filter_by(id_usuario=id_usuario).first()
+
+    try:
+        personas = Personas.query.filter_by(id_usuario=id_usuario).first_or_404()
+    except:
+        response = jsonify({'mensaje':'Usuario no encontrado.'})
+        response.status_code = 404
+        return response
+    
     try:
         personas.nombre = json['nombre']
         personas.apellido = json['apellido']
@@ -153,7 +165,12 @@ def facturas_delete(id_factura):
 @app.route('/api/facturas/<id_factura>', methods=['PUT'])
 def facturas_put(id_factura):
     json = request.get_json()
-    facturas = Facturas.query.filter_by(id_factura=id_factura).first()
+    try:
+        facturas = Facturas.query.filter_by(id_factura=id_factura).first_or_404()
+    except:
+        response = jsonify({'mensaje':'No se encontró la factura.'})
+        response.status_code = 404
+        return response
     try:
         facturas.monto_facturado = json['monto_facturado']
         facturas.fecha_facturacion = json['fecha_facturacion']
@@ -203,7 +220,12 @@ def reproducciones_delete(id_cancion,id_usuario):
 @app.route('/api/reproducciones/<id_cancion>/<id_usuario>', methods=['PUT'])
 def reproducciones_put(id_cancion,id_usuario):
     json = request.get_json()
-    reproducciones = Reproducciones.query.filter_by(id_cancion=id_cancion,id_usuario=id_usuario).first()
+    try:
+        reproducciones = Reproducciones.query.filter_by(id_cancion=id_cancion,id_usuario=id_usuario).first_or_404()
+    except:
+        response = jsonify({'mensaje':'No se encontró la reproducción'})
+        response.status_code = 404
+        return response
     try:
         reproducciones.cantidad_reproducciones = json['cantidad_reproducciones']
         reproducciones.ultima_reproduccion = json['ultima_reproduccion']
@@ -220,35 +242,34 @@ def reproducciones_put(id_cancion,id_usuario):
 @app.route('/api/moroso/<id_usuario>', methods=['GET'])
 def moroso(id_usuario):
 
-    #FALTA VERIFICAR QUE EL USUARIO EXISTA########
-    #FALTA VERIFICAR QUE EL USUARIO EXISTA########
-    #FALTA VERIFICAR QUE EL USUARIO EXISTA########
-    #FALTA VERIFICAR QUE EL USUARIO EXISTA########
-
     facturas = [factura.json() for factura in Facturas.query.filter_by(id_usuario=id_usuario)]
-
     today = date.today()
+    if facturas != []:
+        fac = []
 
-    fac = []
+        for factura in facturas:
+            fecha = factura["fecha_vencimiento"]
+            estado = factura["estado"]
+            if (( fecha - today).days <0) and estado == false:
+                fac.append(factura)
 
-    for factura in facturas:
-        fecha = factura["fecha_vencimiento"]
-        estado = factura["estado"]
-        if (( fecha - today).days <0) and estado == false:
-            fac.append(factura)
+        if (fac==[]):
+            mensaje="El usuario no tiene facturas vencidas."
+        else:
+            mensaje="El usuario tiene facturas vencidas."
 
-    if (fac==[]):
-        mensaje="El usuario no tiene facturas vencidas."
+
+        response= {
+            "mensaje": mensaje,
+            "facturas": fac
+        }
+        response = jsonify(response)
+        return response
     else:
-        mensaje="El usuario tiene facturas vencidas."
-
-
-    response= {
-        "mensaje": mensaje,
-        "facturas": fac
-    }
-    response = jsonify(response)
-    return response
+        response = { "mensaje": "El usuario no existe."}
+        response = jsonify(response)
+        response.status_code = 404
+        return response
 
 #====================================================================================#
 #=================================PERSONAS MOROSAS===================================#
