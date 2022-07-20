@@ -31,7 +31,6 @@ Donde cada string contenga la credencial que le corresponda para conectarse a la
 # Dificultades y tiempos
 
 - Como grupo se nos dificulto el hecho de tener que comprender el funcionamiento de las nuevas librerias de python, a la vez que teniamos que aprender como integrarlas con las nuevas técnologias que por su puesto tambien suponieron un desafío a la hora de utilizar estas.
-- 
 - Lidiar con el dolor de espalda.
 - Deficit de dinero debido a la compra de café
 
