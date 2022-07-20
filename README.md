@@ -31,6 +31,7 @@ Donde cada string contenga la credencial que le corresponda para conectarse a la
 # Dificultades y tiempos
 
 - Como grupo se nos dificulto el hecho de tener que comprender el funcionamiento de las nuevas librerias de python, a la vez que teniamos que aprender como integrarlas con las nuevas técnologias que por su puesto tambien suponieron un desafío a la hora de utilizar estas.
+- Los tiempos de trabajo se dividieron de forma anormal durante el trabajo debido a que este no permitia al edición simultanea del mismo porque solo era un archivo, por lo que la modalidad por la que se opto fue recurrir al *compartir pantalla* de la aplicación *discord*, en la cual uno trabajaba mientras el otro observaba como se realizaban las cosas y aportaba con ideas. Además llegado el momento se nos presento la oportunidad de poder trabajar simultaneamente debido a que mientras un integrante se dedicaba a la documentación de *PostMan* el otro podia preocuparse de continuar el desarrollo del código mismo. Finalmente en las etapas finales (debido a la altura del semestre en la que nos encontramos) cada uno avanzo en lo que pudo dentro de su tiempo libre, ya sea, avanzar con el reporte de *PowerBi*, documentación *PostMan*, revisar la base de datos en *PgAdmin* o simplemente desarrolando el código en *Visual Studio Code*
 - Lidiar con el dolor de espalda.
 - Deficit de dinero debido a la compra de café
 
