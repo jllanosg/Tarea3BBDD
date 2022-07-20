@@ -36,7 +36,7 @@ Donde cada string contenga la credencial que le corresponda para conectarse a la
 
 ## To-do
 - [X] Reparar mensajes de estado 404 (not found) y 400 (bad request).
-- [ ] En endpoint moroso, que verifique que el usuario exista.
+- [X] En endpoint moroso, que verifique que el usuario exista.
 - [ ] Publicar **bien** la documentación final en postman.
 - [ ] Agregar dump final a la entrega.
 ## Extras
